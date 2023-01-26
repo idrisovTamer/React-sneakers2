@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 
 function App() {
   const [items, setItems] = useState([]);
+  const [cartItems, setCartItems] = useState([]);
   const [cartOpened , setCartOpened] = useState(false);
 
 useEffect(()=>{
@@ -16,9 +17,16 @@ useEffect(()=>{
     setItems(json)
   });
 },[]);
+
+const onAddToCart = (obj) => {
+  setCartItems([...cartItems, obj])
+  
+};
+console.log(cartItems)
+
   return (
     <div className="wrapper clear">
-      {cartOpened ? <Drawer onClose={()=> setCartOpened(false)}/> : null}  
+      {cartOpened ? <Drawer items={cartItems} onClose={()=> setCartOpened(false)}/> : null}  
       <Header onClickCart={()=> {setCartOpened(true)}} />
       <div className="content p-40 ">
         <div className="d-flex align-center justify-between mb-40">
@@ -30,12 +38,12 @@ useEffect(()=>{
         </div>
         <div className="d-flex flex-wrap ">
 
-          {items.map((obj) => (
-            <Card title={obj.title}
-              price={obj.price}
-              imageUrl={obj.imageUrl}
+          {items.map((item) => (
+            <Card title={item.title}
+              price={item.price}
+              imageUrl={item.imageUrl}
               onFavorite={() => console.log('Добавили в закладки')}
-              onPlus={() => console.log('Нажали на плюс')} />
+              onPlus={(obj) => onAddToCart(obj)} />
           ))}
         </div>
       </div>
